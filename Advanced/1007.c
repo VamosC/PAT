@@ -1,3 +1,4 @@
+//one pass
 #include<stdio.h>
 #include<stdlib.h>
 
