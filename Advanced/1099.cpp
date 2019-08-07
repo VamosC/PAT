@@ -1,37 +1,92 @@
-// #include <bits/stdc++.h>
-#include <iostream>
-#include <memory>
+#include <bits/stdc++.h>
 using namespace std;
 
-class BNode
+struct BNode
 {
-public:
     int val;
-    shared_ptr<BNode> next;
-    BNode() : next(nullptr) {}
+    shared_ptr<BNode> left;
+    shared_ptr<BNode> right;
+    BNode() : left(nullptr), right(nullptr) {}
     ~BNode() {}
 };
 
-class A
+void make_tree(vector<shared_ptr<BNode>> &tree, const vector<pair<int, int>> &children, int i)
 {
-public:
-    virtual void f() {cout << "A f" << '\n';}
-    virtual int g() { cout << "A g" << '\n';return x; }
-    int x;
-};
+    if (children[i].first != -1)
+    {
+        tree[i]->left = tree[children[i].first];
+        make_tree(tree, children, children[i].first);
+    }
+    if (children[i].second != -1)
+    {
+        tree[i]->right = tree[children[i].second];
+        make_tree(tree, children, children[i].second);
+    }
+}
 
-class B : public A
+void inOrder(shared_ptr<BNode> &node, const vector<int> &v, int &i)
 {
-public:
-    void f() override { cout << "B f" << '\n';this->y = 2; }
-    int y;
-};
+    if (node->left)
+    {
+        inOrder(node->left, v, i);
+    }
+    node->val = v[i++];
+    if (node->right)
+    {
+        inOrder(node->right, v, i);
+    }
+}
+
+void levelOrder(const shared_ptr<BNode> &node)
+{
+    queue<shared_ptr<BNode>> v;
+    if (node == nullptr)
+        return;
+    v.push(node);
+    bool flag = true;
+    while (!v.empty())
+    {
+        auto p = v.front();
+        if (flag)
+        {
+            cout << p->val;
+            flag = false;
+        }
+        else
+            cout << " " << p->val;
+        v.pop();
+        if (p->left)
+            v.push(p->left);
+        if (p->right)
+            v.push(p->right);
+    }
+}
 
 int main()
 {
-    B* a = new B();
-    A* b = a;
-    a->f();
-    b->f();
+    int n;
+    cin >> n;
+    vector<shared_ptr<BNode>> searchT(n);
+    vector<pair<int, int>> children;
+    for (auto i = 0; i < n; i++)
+        searchT[i] = make_shared<BNode>();
+    for (auto i = 0; i < n; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        children.push_back(make_pair(a, b));
+    }
+    make_tree(searchT, children, 0);
+    vector<int> v;
+    for (auto i = 0; i < n; i++)
+    {
+        int x;
+        cin >> x;
+        v.push_back(x);
+    }
+    sort(v.begin(), v.end());
+    int count = 0;
+    inOrder(searchT[0], v, count);
+    levelOrder(searchT[0]);
     return 0;
 }
