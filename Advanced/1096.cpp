@@ -2,35 +2,17 @@
 
 using namespace std;
 
-bool is_prime(int n)
-{
-    if (n == 1)
-        return false;
-    for (auto x = 2; x < sqrt(n); x++)
-    {
-        if (n % x == 0)
-            return false;
-    }
-    return true;
-}
-
 int main()
 {
-    int64_t x;
+    int x;
     cin >> x;
-    if (is_prime(x))
-    {
-        cout << 1 << '\n';
-        cout << x << '\n';
-        return 0;
-    }
-    int64_t s, len;
+    int s, len;
     len = 0;
-    for (int64_t i = 2; i <= x; i++)
+    for (auto i = 2; i <= sqrt(x); i++)
     {
-        int64_t tmp = x;
-        int64_t tmp_len = 0;
-        for (int64_t j = i; j <= tmp; j++)
+        auto tmp = x;
+        auto tmp_len = 0;
+        for (auto j = i; j <= tmp; j++)
         {
             if (tmp % j == 0)
             {
@@ -46,8 +28,14 @@ int main()
             s = i;
         }
     }
+    if (len == 0)
+    {
+        cout << 1 << '\n'
+             << x << '\n';
+        return 0;
+    }
     cout << len << '\n';
-    for (int64_t i = 0; i < len; ++i)
+    for (auto i = 0; i < len; ++i)
     {
         if (i == 0)
         {
